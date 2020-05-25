@@ -1,0 +1,77 @@
+---
+- hosts: localhost
+  become: yes
+  tasks:
+    - name: Configure TouchToTap and NaturalScrolling
+      template:
+        src: etc/X11/xorg.conf.d/00-synaptics.conf
+        dest: /etc/X11/xorg.conf.d/00-synaptics.conf
+
+    - name: Fix Screen Tearing problem
+      template:
+        src: etc/X11/xorg.conf.d/20-intel.conf
+        dest: /etc/X11/xorg.conf.d/20-intel.conf
+      
+    - name: Install essential packages
+      package:
+        name: '{{ item }}'
+        state: latest
+      loop:
+        - gpg
+        - git
+        - apt-transport-https
+      
+    - name: Install lightdm
+      package:
+        name: lightdm
+        state: latest
+    - name: Configure lightdm
+      template:
+        src: etc/lightdm/lightdm.conf
+        dest: /etc/lightdm/lightdm.conf
+
+    - name: Install terminology
+      package:
+        name: terminology
+        state: latest
+
+    - name: Install i3
+      package:
+        name: i3
+        state: latest
+
+    - name: Install Google Signing Key
+      apt_key:
+        url: https://dl.google.com/linux/linux_signing_key.pub
+        state: present
+    - name: Add Google Chrome Repository
+      apt_repository:
+        repo: deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main
+        state: present
+        filename: google-chrome
+    - name: Install Google Chrome Stable
+      package:
+        name: google-chrome-stable
+        state: latest
+
+    - name: Install Visual Studio Code key
+      apt_key:
+        url: https://packages.microsoft.com/keys/microsoft.asc
+        state: present
+    - name: Add Visual Studio Code Repository
+      apt_repository:
+        repo: deb [arch=amd64] http://packages.microsoft.com/repos/vscode stable main
+        state: present
+        filename: vscode
+    - name: Install Visual Studio Code
+      package:
+        name: code
+        state: latest
+
+- hosts: localhost
+  become: no
+  tasks:     
+    - name: Configure i3
+      template:
+        src: user/.config/i3/config
+        dest: ~/.config/i3/config
