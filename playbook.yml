@@ -194,3 +194,13 @@
       template:
         src: user/.config/i3/config
         dest: ~/.config/i3/config
+    
+    - name: Install VSCode Extensions
+      include_tasks: ./install_vscode_extension.yml
+      vars:
+        item: '{{ item }}'
+      tags:
+        - vscode-extensions
+      loop:
+        - ms-azuretools.vscode-docker
+        - GoogleCloudTools.cloudcode

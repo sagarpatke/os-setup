@@ -1,0 +1,17 @@
+- name: Check if extension exists
+  shell:
+    cmd: "code --list-extensions"
+  register: extension_list
+  changed_when: false
+  tags:
+    - vscode-extensions
+- debug:
+    msg: "{{ extension_list.stdout_lines }}"
+  tags:
+      - vscode-extensions
+- name: Install extension
+  shell:
+    cmd: "code --install-extension {{ item }}"
+  when: "item not in extension_list.stdout_lines"
+  tags:
+    - vscode-extensions
