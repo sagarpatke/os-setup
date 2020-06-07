@@ -2,6 +2,11 @@
 - hosts: localhost
   become: yes
   tasks:
+    - name: Create directory /etc/X11/xorg.conf.d
+      file:
+        path: /etc/X11/xorg.conf.d
+        state: directory
+        recurse: yes
     - name: Configure TouchToTap and NaturalScrolling
       template:
         src: etc/X11/xorg.conf.d/00-synaptics.conf
@@ -191,6 +196,11 @@
 - hosts: localhost
   become: no
   tasks:     
+    - name: Create i3 configuration directory
+      file:
+        path: ~/.config/i3
+        state: directory
+        recurse: yes
     - name: Configure i3
       template:
         src: user/.config/i3/config
