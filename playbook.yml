@@ -20,6 +20,7 @@
         - gpg
         - git
         - apt-transport-https
+        - fonts-noto-color-emoji
       
     - name: Install terminology
       package:
@@ -204,3 +205,4 @@
       loop:
         - ms-azuretools.vscode-docker
         - GoogleCloudTools.cloudcode
+        - shd101wyy.markdown-preview-enhanced
