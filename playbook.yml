@@ -21,6 +21,7 @@
         - git
         - apt-transport-https
         - fonts-noto-color-emoji
+        - ca-certificates
       
     - name: Install terminology
       package:
@@ -187,6 +188,20 @@
         checksum: "sha256:{{ skaffold_checksum.content.split()[0] }}"
       tags:
         - skaffold
+
+    - name: Install Google SDK Signing Key
+      apt_key:
+        url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+        state: present
+    - name: Configure Google SDK Repository
+      apt_repository:
+        repo: deb https://packages.cloud.google.com/apt cloud-sdk main
+        filename: cloud-sdk
+        state: present
+    - name: Install Cloud SDK
+      package:
+        name: google-cloud-sdk
+        state: latest
 
 - hosts: localhost
   become: no
