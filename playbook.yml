@@ -27,6 +27,7 @@
         - apt-transport-https
         - fonts-noto-color-emoji
         - ca-certificates
+        - curl
       
     - name: Install terminology
       package:
@@ -207,6 +208,43 @@
       package:
         name: google-cloud-sdk
         state: latest
+    
+    - name: Install helm
+      uri:
+        url: https://api.github.com/repos/helm/helm/releases/latest
+      register: helm_version
+      tags:
+        - helm
+    - name: Helm version
+      debug:
+        msg: "{{ helm_version.json.tag_name }}"
+      tags:
+        - helm
+    - name: Download helm
+      get_url:
+        url: https://get.helm.sh/helm-{{ helm_version.json.tag_name }}-linux-amd64.tar.gz
+        dest: /opt
+      tags:
+        - helm
+    - name: Unarchive helm
+      unarchive:
+        copy: no
+        src: /opt/helm-{{ helm_version.json.tag_name }}-linux-amd64.tar.gz
+        dest: /opt
+      tags:
+        - helm
+    - name: Copy helm binary to path
+      copy:
+        remote_src: yes
+        src: /opt/linux-amd64/{{ item }}
+        dest: /usr/local/bin
+        mode: 0755
+      loop:
+        - helm
+        - tiller
+      tags:
+        - helm
+
 
 - hosts: localhost
   become: no
