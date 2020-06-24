@@ -247,6 +247,34 @@
       tags:
         - helm
 
+    - name: Add Azure CLI software repository
+      apt_repository:
+        repo: deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ buster main
+        filename: azure-cli-software-repository
+        state: present
+      tags:
+        - azure
+    - name: Install Azure CLI
+      package:
+        name: azure-cli
+        state: latest
+      tags:
+        - azure
+    
+    - name: Add Azure functions core tools repository
+      apt_repository:
+        repo: deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-debian-buster-prod buster main
+        filename: azure-functions-core-tools
+        state: present
+      tags:
+        - azure
+    - name: Install Azure functions core tools
+      package:
+        name: azure-functions-core-tools
+        state: latest
+      tags:
+        - azure
+
     - name: Install Bluetooth utilities
       package:
         name: "{{ item }}"
