@@ -245,6 +245,33 @@
       tags:
         - helm
 
+    - name: Install Bluetooth utilities
+      package:
+        name: "{{ item }}"
+        state: latest
+      loop:
+        - pulseaudio
+        - pulseaudio-module-bluetooth
+        - pavucontrol
+        - bluez-firmware
+      notify:
+        - Restart Bluetooth Service
+        - Kill pulseaudio
+
+    - name: Install Open Broadcaster Studio
+      package:
+        name: obs-studio
+        state: latest
+      tags:
+        - obs
+    
+  handlers:
+    - name: Restart Bluetooth Service
+      service:
+        name: bluetooth
+        state: restarted
+    - name: Kill pulseaudio
+      shell: killall -9 pulseaudio
 
 - hosts: localhost
   become: no
