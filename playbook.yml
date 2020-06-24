@@ -275,6 +275,63 @@
       tags:
         - azure
 
+    - name: Install OpenJDK 11 and maven
+      package:
+        name: "{{ item }}"
+        state: latest
+      loop:
+        - openjdk-11-jdk
+        - maven
+      tags:
+        - java
+
+    - name: Add Amazon Corretto signing key
+      apt_key:
+        url: https://apt.corretto.aws/corretto.key
+        state: present
+      tags:
+        - java
+    - name: Add Amazon Corretto repository
+      apt_repository:
+        repo: deb https://apt.corretto.aws stable main
+        filename: corretto
+        state: present
+      tags:
+        - java
+    - name: Install amazon corretto
+      package:
+        name: "{{ item }}"
+        state: latest
+      loop:
+        - java-1.8.0-amazon-corretto-jdk
+        - java-11-amazon-corretto-jdk
+      tags:
+        - java
+
+    - name: Add Azul Zulu JDK signing key
+      apt_key:
+        keyserver: hkp://keyserver.ubuntu.com:80
+        id: "0xB1998361219BD9C9"
+        state: present
+      tags:
+        - java
+    - name: Add Azul Zulu JDK
+      apt_repository:
+        repo: deb http://repos.azul.com/azure-only/zulu/apt stable main
+        filename: azul-zulu
+        state: present
+      tags:
+        - java
+    - name: Install Azul Zulu 8
+      package:
+        name: "{{ item }}"
+        state: latest
+      loop:
+        - zulu-8-azure-jdk
+        - zulu-11-azure-jdk
+      tags:
+        - java
+
     - name: Install Bluetooth utilities
       package:
         name: "{{ item }}"
