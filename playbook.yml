@@ -28,7 +28,10 @@
         - fonts-noto-color-emoji
         - ca-certificates
         - curl
-      
+        - firmware-iwlwifi
+        - vim
+        - network-manager
+
     - name: Install terminology
       package:
         name: terminology
@@ -142,7 +145,6 @@
         url: "https://storage.googleapis.com/kubernetes-release/release/{{ kubectl_version.content | replace('\n', '') }}/bin/linux/amd64/kubectl"
         dest: /usr/local/bin/kubectl
         mode: 0755
-        checksum: sha256:6fcf70aae5bc64870c358fac153cdfdc93f55d8bae010741ecce06bb14c083ea
       tags:
         - minikube
 
@@ -272,6 +274,7 @@
         state: restarted
     - name: Kill pulseaudio
       shell: killall -9 pulseaudio
+      failed_when: false
 
 - hosts: localhost
   become: no
