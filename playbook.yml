@@ -3,6 +3,7 @@
   become: yes
   vars:
     helm_version: v3.2.4
+    skaffold_version: v1.12.0
   tasks:
     - name: Create directory /etc/X11/xorg.conf.d
       file:
@@ -184,15 +185,9 @@
       tags:
         - minikube
 
-    - name: Check latest version of skaffold
-      uri:
-        url: https://api.github.com/repos/GoogleContainerTools/skaffold/releases/latest
-      register: skaffold_version
-      tags:
-        - skaffold
     - name: Get Skaffold Checksum
       uri:
-        url: https://github.com/GoogleContainerTools/skaffold/releases/download/{{ skaffold_version.json.tag_name }}/skaffold-linux-amd64.sha256
+        url: https://github.com/GoogleContainerTools/skaffold/releases/download/{{ skaffold_version }}/skaffold-linux-amd64.sha256
         return_content: yes
       register: skaffold_checksum
       tags:
@@ -204,7 +199,7 @@
         - skaffold
     - name: Download and install skaffold
       get_url:
-        url: "https://github.com/GoogleContainerTools/skaffold/releases/download/{{ skaffold_version.json.tag_name }}/skaffold-linux-amd64"
+        url: "https://github.com/GoogleContainerTools/skaffold/releases/download/{{ skaffold_version }}/skaffold-linux-amd64"
         dest: /usr/local/bin/skaffold
         mode: 0755
         checksum: "sha256:{{ skaffold_checksum.content.split()[0] }}"
