@@ -1,6 +1,8 @@
 ---
 - hosts: localhost
   become: yes
+  vars:
+    helm_version: v3.2.4
   tasks:
     - name: Create directory /etc/X11/xorg.conf.d
       file:
@@ -223,27 +225,27 @@
         name: google-cloud-sdk
         state: latest
     
-    - name: Install helm
-      uri:
-        url: https://api.github.com/repos/helm/helm/releases/latest
-      register: helm_version
-      tags:
-        - helm
+    # - name: Install helm
+    #   uri:
+    #     url: https://api.github.com/repos/helm/helm/releases/latest
+    #   register: helm_version
+    #   tags:
+    #     - helm
     - name: Helm version
       debug:
-        msg: "{{ helm_version.json.tag_name }}"
+        msg: "{{ helm_version }}"
       tags:
         - helm
     - name: Download helm
       get_url:
-        url: https://get.helm.sh/helm-{{ helm_version.json.tag_name }}-linux-amd64.tar.gz
+        url: https://get.helm.sh/helm-{{ helm_version }}-linux-amd64.tar.gz
         dest: /opt
       tags:
         - helm
     - name: Unarchive helm
       unarchive:
         copy: no
-        src: /opt/helm-{{ helm_version.json.tag_name }}-linux-amd64.tar.gz
+        src: /opt/helm-{{ helm_version }}-linux-amd64.tar.gz
         dest: /opt
       tags:
         - helm
